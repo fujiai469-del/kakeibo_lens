@@ -33,7 +33,8 @@ export async function analyzeKakeiboImage(imageUri: string): Promise<AIAnalysisR
     const base64Image = await imageToBase64(imageUri);
 
     // サーバーのAI解析APIを呼び出し
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000';
+    // EXPO_PUBLIC_API_BASE_URLを使用（開発環境と本番環境の両方に対応）
+    const apiUrl = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000';
     const response = await fetch(`${apiUrl}/api/analyze-kakeibo`, {
       method: 'POST',
       headers: {

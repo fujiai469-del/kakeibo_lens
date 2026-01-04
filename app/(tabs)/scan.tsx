@@ -13,6 +13,7 @@ import { KakeiboEntry } from '@/types/kakeibo';
 /**
  * スキャン画面
  * カメラで家計簿を撮影し、AI解析を実行
+ * Web環境では画像選択のみ対応
  */
 export default function ScanScreen() {
   const colors = useColors();
@@ -20,30 +21,34 @@ export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const cameraRef = useRef<CameraView>(null);
+  const isWeb = Platform.OS === 'web';
 
-  // カメラ権限の確認
-  if (!permission) {
-    return (
-      <ScreenContainer className="items-center justify-center">
-        <ActivityIndicator size="large" color={colors.primary} />
-      </ScreenContainer>
-    );
-  }
+  // Web環境ではカメラ権限チェックをスキップ
+  if (!isWeb) {
+    // カメラ権限の確認
+    if (!permission) {
+      return (
+        <ScreenContainer className="items-center justify-center">
+          <ActivityIndicator size="large" color={colors.primary} />
+        </ScreenContainer>
+      );
+    }
 
-  if (!permission.granted) {
-    return (
-      <ScreenContainer className="items-center justify-center p-6">
-        <Text className="text-lg text-foreground text-center mb-4">
-          カメラへのアクセスが必要です
-        </Text>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: colors.primary }]}
-          onPress={requestPermission}
-        >
-          <Text className="text-background font-semibold">許可する</Text>
-        </TouchableOpacity>
-      </ScreenContainer>
-    );
+    if (!permission.granted) {
+      return (
+        <ScreenContainer className="items-center justify-center p-6">
+          <Text className="text-lg text-foreground text-center mb-4">
+            カメラへのアクセスが必要です
+          </Text>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.primary }]}
+            onPress={requestPermission}
+          >
+            <Text className="text-background font-semibold">許可する</Text>
+          </TouchableOpacity>
+        </ScreenContainer>
+      );
+    }
   }
 
   // カメラで撮影
@@ -141,6 +146,56 @@ export default function ScanScreen() {
     }
   };
 
+  // Web環境では画像選択のみ表示
+  if (isWeb) {
+    return (
+      <ScreenContainer className="items-center justify-center p-6">
+        <View className="w-full max-w-md gap-6">
+          {/* ヘッダー */}
+          <View className="items-center gap-2">
+            <Text className="text-2xl font-bold text-foreground">家計簿をスキャン</Text>
+            <Text className="text-base text-muted text-center">
+              手書き家計簿の画像を選択してください
+            </Text>
+          </View>
+
+          {/* 画像選択ボタン */}
+          {isAnalyzing ? (
+            <View
+              style={[
+                styles.webButton,
+                { backgroundColor: colors.primary },
+              ]}
+            >
+              <ActivityIndicator size="large" color="#FFFFFF" />
+              <Text className="text-white text-lg mt-4">AI解析中...</Text>
+              <Text className="text-white text-sm mt-2">しばらくお待ちください</Text>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={[
+                styles.webButton,
+                { backgroundColor: colors.primary },
+              ]}
+              onPress={handlePickImage}
+            >
+              <Text className="text-background text-xl font-semibold">画像を選択</Text>
+            </TouchableOpacity>
+          )}
+
+          {/* 説明 */}
+          <View className="bg-surface rounded-2xl p-6 border border-border">
+            <Text className="text-sm text-muted leading-relaxed">
+              手書き家計簿の写真を選択すると、AIが自動的に日付・項目・金額を認識して、
+              デジタルデータとして保存します。
+            </Text>
+          </View>
+        </View>
+      </ScreenContainer>
+    );
+  }
+
+  // ネイティブ環境ではカメラプレビューを表示
   return (
     <ScreenContainer edges={['top', 'left', 'right', 'bottom']}>
       <View className="flex-1">
@@ -252,6 +307,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 24,
+  },
+  webButton: {
+    width: '100%',
+    paddingVertical: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   analyzingOverlay: {
     ...StyleSheet.absoluteFillObject,

@@ -4,6 +4,9 @@
   "framework": null,
   "installCommand": "pnpm install",
   "devCommand": "pnpm run dev",
+  "env": {
+    "EXPO_NO_CACHE": "1"
+  },
   "rewrites": [
     {
       "source": "/api/:path*",

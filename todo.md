@@ -69,6 +69,6 @@
 - [x] app.config.tsのweb.outputを"single"に変更（SPAビルド）
 - [x] vercel.jsonのビルド設定修正
 - [x] ローカルでビルドテスト成功
-- [ ] 修正内容をGitHubにプッシュ
+- [x] 修正内容をGitHubにプッシュ
 - [ ] Vercelで再デプロイ
 - [ ] デプロイ後の動作確認

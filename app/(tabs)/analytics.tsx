@@ -68,17 +68,30 @@ export default function AnalyticsScreen() {
     }
   };
 
-  // カテゴリ別集計
+  // カテゴリ別集計（カテゴリ名で集計）
   const getCategoryData = () => {
     const categoryMap = new Map<string, { name: string; color: string; amount: number }>();
+    
+    // デフォルトカテゴリを初期化
     categories.forEach((cat) => {
-      categoryMap.set(cat.id, { name: cat.name, color: cat.color, amount: 0 });
+      categoryMap.set(cat.name, { name: cat.name, color: cat.color, amount: 0 });
     });
 
+    // エントリをカテゴリ別に集計
     monthlyEntries.forEach((entry) => {
-      const cat = categoryMap.get(entry.categoryId);
-      if (cat) {
-        cat.amount += entry.amount;
+      const categoryName = entry.categoryName || entry.categoryId || 'その他';
+      
+      if (!categoryMap.has(categoryName)) {
+        // 未知のカテゴリは「その他」に集約
+        const otherCat = categoryMap.get('その他');
+        if (otherCat) {
+          otherCat.amount += entry.amount;
+        }
+      } else {
+        const cat = categoryMap.get(categoryName);
+        if (cat) {
+          cat.amount += entry.amount;
+        }
       }
     });
 

@@ -107,20 +107,30 @@ export default function ScanScreen() {
       }
 
       // 解析結果を保存
+      console.log('AI解析結果:', JSON.stringify(result, null, 2));
+      
       for (const entry of result.entries) {
+        // AIが推測したカテゴリ名を正規化
+        const categoryName = entry.suggestedCategory || 'その他';
+        console.log(`項目: ${entry.itemName}, 推測カテゴリ: ${categoryName}`);
+        
         const kakeiboEntry: KakeiboEntry = {
           id: `entry_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           date: entry.date,
           itemName: entry.itemName,
           amount: entry.amount,
-          categoryId: 'default_0', // デフォルトカテゴリ（後で修正可能）
+          categoryId: categoryName, // AIが推測したカテゴリ名をそのまま使用
+          categoryName: categoryName,
           imageUri,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
 
+        console.log('保存するエントリ:', JSON.stringify(kakeiboEntry, null, 2));
         await addEntry(kakeiboEntry);
       }
+      
+      console.log(`${result.entries.length}件のデータを保存しました`)
 
       // 成功のハプティックフィードバック
       if (Platform.OS !== 'web') {

@@ -16,7 +16,7 @@ const env = {
   appSlug: "kakeibo_lens",
   // S3 URL of the app logo - set this to the URL returned by generate_image when creating custom logo
   // Leave empty to use the default icon from assets/images/icon.png
-  logoUrl: "",
+  logoUrl: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663210650499/UtxaMUxaeQoVSIod.png",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,
@@ -45,7 +45,7 @@ const config: ExpoConfig = {
     edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
     package: env.androidPackage,
-    permissions: ["POST_NOTIFICATIONS"],
+    permissions: ["POST_NOTIFICATIONS", "CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
     intentFilters: [
       {
         action: "VIEW",
@@ -67,6 +67,18 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-router",
+    [
+      "expo-camera",
+      {
+        cameraPermission: "$(PRODUCT_NAME)が家計簿を撮影するためにカメラへのアクセスが必要です。",
+      },
+    ],
+    [
+      "expo-image-picker",
+      {
+        photosPermission: "$(PRODUCT_NAME)が家計簿の画像を選択するために写真ライブラリへのアクセスが必要です。",
+      },
+    ],
     [
       "expo-audio",
       {

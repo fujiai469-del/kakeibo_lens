@@ -59,8 +59,16 @@
 - [x] デプロイ手順ドキュメントの作成
 
 ## Git/Vercelデプロイタスク
-- [ ] GitHubリポジトリの作成
-- [ ] プロジェクトをGitHubにプッシュ
+- [x] GitHubリポジトリの作成
+- [x] プロジェクトをGitHubにプッシュ
 - [ ] Vercelプロジェクトの作成
 - [ ] Vercelデプロイの実行
+- [ ] デプロイ後の動作確認
+
+## Vercelビルドエラー修正タスク
+- [x] app.config.tsのweb.outputを"single"に変更（SPAビルド）
+- [x] vercel.jsonのビルド設定修正
+- [x] ローカルでビルドテスト成功
+- [ ] 修正内容をGitHubにプッシュ
+- [ ] Vercelで再デプロイ
 - [ ] デプロイ後の動作確認

@@ -1,0 +1,8 @@
+node_modules
+.expo
+.git
+.manus
+server
+*.log
+.DS_Store
+.env*.local
